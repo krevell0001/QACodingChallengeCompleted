@@ -1,0 +1,30 @@
+Objective:
+Create a test plan for Zero Generation alerts. We need to confirm if alertstatus should be set to open, closed, or acknowledged and confirm that the email was sent if needed based on alertstatus.
+
+Variables:
+datapoint = data from the device in question
+timestamp = time that we recieved the data
+alertstatus = status of the alert (open, closed, or acknowledged)
+
+Process:
+//Analyze the datapoint that we are recieving from the device during the current timestamp (this can be polled via the API):
+	If datapoint>0, then there is no need to trigger an alert. Stop testing process.
+	If datapoint<=0, validate the timestamp of the datapoint to confirm that datapoint is during daylight hours.
+		If timestamp is between sunset-sunrise thresholds, based on timezone and sun position, confirm that alert is not triggered and stop testing process for this datapoint.
+	Continue to analyze datapoints at subsequent timestamp intervals to confirm zero generation applicability.
+		
+//Triggering the Alert and Email Notification:
+	If datapoint<=0 and outside of the sunset-sunrise period as mentioned previously, a zero generation alert will need to be triggered. Confirm that alert is in the open status and that an email has been sent to the customer.
+	Continue to check new datapoints at the set timeframe and confirm alertstatus. If datapoint remains in the zero generation bucket (datapoint<=0) and alert remains in the open status, confirm email is sent daily to the customer. Continue to confirm email is sent daily until alertstatus changes and is either acknowledged or closed. 
+	If alertstatus is changed to acknowledged, an email no longer needs to be sent. Confirm that email is no longer being sent to customer until alertstatus changes again.
+	
+	//Determining if an Alert has a Closed Status:
+		Check datapoint of devices with alerts that have open and acknowledged status at the specified interval. If a datapoint does not have a status listed currently, this part of the process is not needed.
+		If datapoint>0, then the device is now sending proper data and the alert can close. 
+		At this point, we would need to confirm alertstatus is set to closed and email is sent to customer notifying them that the alert has been closed.
+	
+	Continue this process of checking datapoint and alertstatus at specified intervals depending on values we are recieving from device.
+	
+
+		
+	

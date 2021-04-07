@@ -1,0 +1,20 @@
+# Program to test and confirm that Google's webpage is up and loading.
+# Google URL - https://www.google.com/
+# Google DNS - 8.8.8.8
+# Trying to ping https://www.google.com/. Response from ping will determine if webpage is loading.
+
+# Contents of code to ping Google
+
+import os
+
+def google_ping():
+	pingresult = os.system("ping google.com")
+	return pingresult
+# pingresult=0 - all pings were successful
+# pingresult=1 - some or all pings failed
+
+# Contents of test to confirm if ping was successful
+
+def google_pass():
+	assert pingresult == 0
+
